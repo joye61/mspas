@@ -1,0 +1,35 @@
+{
+  "name": "mspas",
+  "version": "0.0.1",
+  "description": "Multi-project Single Page Application Server",
+  "main": "index.js",
+  "scripts": {
+    "ts": "tsc -w --sourceMap --pretty -p ./tsconfig.json",
+    "dev": "node ./dist/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joye61/mspas.git"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "keywords": [
+    "SPA",
+    "server"
+  ],
+  "author": "Joye",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/joye61/mspas/issues"
+  },
+  "homepage": "https://github.com/joye61/mspas#readme",
+  "devDependencies": {
+    "@types/node": "^20.4.0",
+    "typescript": "^5.1.6"
+  },
+  "dependencies": {
+    "koa": "^2.14.2"
+  }
+}
