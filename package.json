@@ -26,10 +26,13 @@
   },
   "homepage": "https://github.com/joye61/mspas#readme",
   "devDependencies": {
+    "@types/koa": "^2.13.6",
+    "@types/koa-send": "^4.1.3",
     "@types/node": "^20.4.0",
     "typescript": "^5.1.6"
   },
   "dependencies": {
-    "koa": "^2.14.2"
+    "koa": "^2.14.2",
+    "koa-send": "^5.0.1"
   }
 }

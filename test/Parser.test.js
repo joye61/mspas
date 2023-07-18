@@ -6,5 +6,5 @@ const parser = new Parser({
   buildDirs: ["build", "dist"],
 });
 
-const result = parser.search('buy/preferential_vip/b/c/dd');
+const result = parser.search('buy/preferential_vip/index.html');
 console.log(result);
