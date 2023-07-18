@@ -69,6 +69,10 @@ export class Parser {
     // 默认路径
     if (!pathname) {
       pathname = this.config.defaultProject;
+      // 如果默认路径不存在，返回null
+      if (!pathname) {
+        return null;
+      }
     }
 
     // 如果缓存存在，直接返回
