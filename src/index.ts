@@ -10,7 +10,7 @@ export interface AppConfig extends ParserOption {
   port?: number | string;
   // 是否是可信代理模式，一般是反向代理，默认true
   proxy?: boolean;
-  // 静态资源缓存时间，默认30天
+  // 静态资源缓存时间，默认30天，单位秒
   maxAge?: number;
 }
 
@@ -43,7 +43,6 @@ export function runApp(option: AppConfig) {
 
   app.use(async (context: Context) => {
     const result = parser.search(context.path);
-    console.log(result);
     // 如果资源没找到，返回404
     if (!result) {
       context.status = 404;
