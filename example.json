@@ -1,0 +1,7 @@
+{
+  "port": 1714,
+  "maxAge": 2592000,
+  "buildDirs": ["build", "dist"],
+  "appRoot": "/path/to/app",
+  "defaultProject": "/path/to/project"
+}

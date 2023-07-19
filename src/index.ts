@@ -1,6 +1,7 @@
 import { Parser, type ParserOption } from "./Parser";
 import Server, { type Context } from "koa";
 import send from "koa-send";
+import { isDirectory } from "./utils";
 
 /**
  * APP配置
@@ -18,7 +19,7 @@ export interface AppConfig extends ParserOption {
  * 启动并运行APP
  * @param option
  */
-export function runApp(option: AppConfig) {
+export function runApp(option: Partial<AppConfig>) {
   // 默认配置
   const defaultConfig: Partial<AppConfig> = {
     proxy: true,
@@ -27,24 +28,45 @@ export function runApp(option: AppConfig) {
   };
 
   // 合并默认配置和输入配置
-  const config: AppConfig = {
+  const config: Partial<AppConfig> = {
     ...defaultConfig,
     ...option,
   };
+
+  // 如果没有指定应用程序根目录，提示错误
+  if (!config.appRoot) {
+    console.error("Application root not specified");
+    return;
+  }
+  // 如果应用程序根目录不存在，提示错误
+  if (!isDirectory(config.appRoot)) {
+    console.error(
+      "The application root directory does not exist：",
+      config.appRoot
+    );
+    return;
+  }
 
   const app = new Server();
   app.proxy = config.proxy ?? true;
 
   const parser = new Parser({
     appRoot: config.appRoot,
-    buildDirs: config.buildDirs,
+    buildDirs: config.buildDirs!,
     defaultProject: config.defaultProject,
   });
 
+  // 服务器信息解析
+  const packageInfo = require("../package.json");
+  const serverName: string = packageInfo.name;
+  const serverInfo = `${serverName.toUpperCase()} v${packageInfo.version}`;
+
   app.use(async (context: Context) => {
     const result = parser.search(context.path);
+    context.set("Server", serverInfo);
     // 如果资源没找到，返回404
     if (!result) {
+      context.type = "html";
       context.status = 404;
       return;
     }
@@ -59,5 +81,5 @@ export function runApp(option: AppConfig) {
   // 启动并监听APP
   const finalPort = config.port ?? 1714;
   app.listen(finalPort);
-  console.log(`APP启动：${finalPort}`);
+  console.log(`Start and listen: ${finalPort}`);
 }

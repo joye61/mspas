@@ -1,0 +1,16 @@
+[
+  {
+    "port": 1714,
+    "maxAge": 2592000,
+    "buildDirs": ["build", "dist"],
+    "appRoot": "/path/to/app-1",
+    "defaultProject": "/path/to/project"
+  },
+  {
+    "port": 1715,
+    "maxAge": 2592000,
+    "buildDirs": ["build", "dist"],
+    "appRoot": "/path/to/app-2",
+    "defaultProject": "/path/to/project"
+  }
+]
