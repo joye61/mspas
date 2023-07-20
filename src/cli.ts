@@ -11,7 +11,7 @@ program
   )
   .option("-r, --app-root <directory>", "Application root directory")
   .option("-p, --port <number>", "Application listening port number", "1714")
-  .requiredOption(
+  .option(
     "-b, --build-dirs <string...>",
     "List of allowed build directory names",
     ["build", "dist"]
@@ -19,6 +19,11 @@ program
   .option(
     "-d, --default-project <path>",
     "Default project path for root path mapping"
+  )
+  .option(
+    "-s, --public-dir <string>",
+    "Resources that are publicly accessible through the root directory",
+    "__public"
   )
   .option(
     "-m, --max-age <number>",

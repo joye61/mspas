@@ -25,6 +25,7 @@ export function runApp(option: Partial<AppConfig>) {
     proxy: true,
     buildDirs: ["build", "dist"],
     maxAge: 30 * 24 * 60 * 60,
+    publicDir: "__public",
   };
 
   // 合并默认配置和输入配置
@@ -54,6 +55,7 @@ export function runApp(option: Partial<AppConfig>) {
     appRoot: config.appRoot,
     buildDirs: config.buildDirs!,
     defaultProject: config.defaultProject,
+    publicDir: config.publicDir!,
   });
 
   // 服务器信息解析

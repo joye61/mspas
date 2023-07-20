@@ -12,6 +12,8 @@ export interface ParserOption {
   buildDirs: Array<string>;
   // 当前APP的默认项目，因为会冲突，默认项目不支持路由，只能访问入口
   defaultProject?: string;
+  // 根路径直接访问的公共路径，公共路径不允许有子目录，默认
+  publicDir: string;
 }
 
 export class Parser {
@@ -62,7 +64,7 @@ export class Parser {
   public search(pathname: string): string | null {
     pathname = this.normalize(pathname);
 
-    // 默认路径
+    // 默认项目路径
     if (!pathname) {
       pathname = this.config.defaultProject ?? "";
       // 如果默认路径不存在，返回null
@@ -82,6 +84,20 @@ export class Parser {
     const hasSuffix = !!path.extname(last);
     if (hasSuffix) {
       segments.pop();
+    }
+
+    // 判断访问的是不是根目录下公开资源
+    if (hasSuffix && !segments.length) {
+      const fullPath = path.join(
+        this.config.appRoot,
+        this.config.publicDir,
+        last
+      );
+      if (!isFile(fullPath)) {
+        delete this.cache[pathname];
+        return null;
+      }
+      return fullPath;
     }
 
     let projectPath = this.config.appRoot;
