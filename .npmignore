@@ -6,3 +6,4 @@
 /.npmignore
 /.gitignore
 /test/
+node_modules/

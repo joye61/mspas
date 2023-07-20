@@ -1,6 +1,6 @@
 {
   "name": "mspas",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Multi-project Single Page Application Server",
   "main": "./dist/index.js",
   "bin": {
@@ -8,7 +8,8 @@
   },
   "scripts": {
     "ts": "tsc -w --sourceMap --pretty -p ./tsconfig.json",
-    "dev": "node ./dist/index.js"
+    "dev": "node ./dist/index.js",
+    "pub": "rm -rfv ./dist && tsc -p ./tsconfig.json && npm publish"
   },
   "repository": {
     "type": "git",
