@@ -3,5 +3,6 @@
   "maxAge": 2592000,
   "buildDirs": ["build", "dist"],
   "appRoot": "/path/to/app",
-  "defaultProject": "/path/to/project"
+  "defaultProject": "/path/to/project",
+  "publicDir": "__public"
 }
