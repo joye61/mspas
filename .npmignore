@@ -2,3 +2,7 @@
 /package-lock.json
 /tsconfig.json
 /src/
+/example.*
+/.npmignore
+/.gitignore
+/test/
