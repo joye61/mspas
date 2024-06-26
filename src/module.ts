@@ -1,9 +1,9 @@
-import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
-import { BaseController } from './BaseController';
-import path from 'node:path';
-import { fileExists } from './functions';
-import { Parser } from './Parser';
+import { Module } from "@nestjs/common";
+import { ConfigModule } from "@nestjs/config";
+import { BaseController } from "./BaseController";
+import path from "node:path";
+import { fileExists } from "./functions";
+import { Parser } from "./Parser";
 
 function createConfigModule() {
   const envFiles: Array<string> = [];
@@ -12,9 +12,19 @@ function createConfigModule() {
   if (env && fileExists(envFile)) {
     envFiles.push(`.env.${env}`);
   }
-  envFiles.push('.env');
+  envFiles.push(".env");
   return ConfigModule.forRoot({
     isGlobal: true,
+    load: [
+      async () => {
+        let result: Record<string, any> = {};
+        try {
+          const loadResult = await import(`./config.${env}.js`);
+          result = loadResult.default.default;
+        } catch (error) {}
+        return result;
+      },
+    ],
     envFilePath: envFiles,
   });
 }
