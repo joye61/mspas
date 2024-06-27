@@ -10,6 +10,8 @@ export interface SearchResult {
 
 @Injectable()
 export class Parser {
+  private packageFile = "package.json";
+  private entryFile = "index.html";
   private root: string;
   private default: string = "";
   private buildDirs: Array<string> = ["dist", "build"];
@@ -17,7 +19,7 @@ export class Parser {
   private cache: Record<string, string> = {};
 
   constructor(private config: ConfigService) {
-    this.root = this.config.get<string>("root");
+    this.root = path.resolve(this.config.get<string>("root"));
     const defaultPath = this.config.get<string>("defaultProject");
     if (defaultPath) {
       this.default = normalize(defaultPath);
@@ -29,7 +31,6 @@ export class Parser {
   }
 
   async search(pathname: string): Promise<string> | null {
-    console.log(this.cache);
     let searchPath = normalize(pathname);
     if (!searchPath) {
       searchPath = this.default;
@@ -68,7 +69,7 @@ export class Parser {
       }
 
       project += parts[i] + path.sep;
-      const packageFile = path.resolve(this.root, project + "package.json");
+      const packageFile = path.resolve(this.root, project, this.packageFile);
       if (await fileExists(packageFile)) {
         hasFind = true;
       }
@@ -79,7 +80,7 @@ export class Parser {
       return null;
     }
 
-    // 查找构建目录
+    // 查找构建目录，找到第一个立即停止查找
     let buildName = "";
     for (let name of this.buildDirs) {
       const buildDir = path.resolve(this.root, project, name);
@@ -94,29 +95,56 @@ export class Parser {
       return null;
     }
 
-    // 如果没有资源路径，则认为是入口文件index.html
-    if (assetPart.length === 0) {
-      possibleFile = path.resolve(this.root, project, buildName, "index.html");
+    // 返回静态入口
+    const returnEntry = async () => {
+      possibleFile = path.resolve(
+        this.root,
+        project,
+        buildName,
+        this.entryFile,
+      );
       exists = await fileExists(possibleFile);
       if (exists) {
         this.cache[searchPath] = possibleFile;
         return possibleFile;
       }
       return null;
+    };
+
+    // 如果没有资源路径，则认为是入口文件index.html
+    const assetPath = assetPart.join(path.sep);
+    if (!assetPath) {
+      return returnEntry();
     }
 
-    // 如果有资源路径，则查找静态资源
-    possibleFile = path.resolve(
-      this.root,
-      project,
-      buildName,
-      assetPart.join(path.sep),
-    );
+    // 如果静态资源存在，则优先直接返回静态资源
+    possibleFile = path.resolve(this.root, project, buildName, assetPath);
     exists = await fileExists(possibleFile);
     if (exists) {
       this.cache[searchPath] = possibleFile;
       return possibleFile;
     }
+
+    // 静态资源不存在且路径不带后缀，则认为是本地路由，直接返回入口
+    if (!path.extname(assetPath)) {
+      return returnEntry();
+    }
+
+    // 静态资源不存在且路径带后缀，返回空（404）
     return null;
+  }
+
+  /**
+   * Auto clear bad cache key
+   */
+  async autoClear() {
+    const keys = Object.keys(this.cache);
+    console.log(keys);
+    for (let key of keys) {
+      const file = this.cache[key];
+      if (!(await fileExists(file))) {
+        delete this.cache[key];
+      }
+    }
   }
 }

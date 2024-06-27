@@ -1,8 +1,8 @@
 import { AppConfig } from "./types";
 
 const config: AppConfig = {
-  root: "/Users/zhoujing/git.chelun.com/s.chelun.com",
-  defaultProject: "thirdparty/jxsd",
+  root: "/path/to/root",
+  defaultProject: "subpath",
 };
 
 export default config;

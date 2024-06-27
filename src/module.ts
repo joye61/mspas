@@ -4,6 +4,8 @@ import { BaseController } from "./BaseController";
 import path from "node:path";
 import { fileExists } from "./functions";
 import { Parser } from "./Parser";
+import { ScheduleModule } from "@nestjs/schedule";
+import { Cache } from './Cache';
 
 function createConfigModule() {
   const envFiles: Array<string> = [];
@@ -30,8 +32,8 @@ function createConfigModule() {
 }
 
 @Module({
-  imports: [createConfigModule()],
+  imports: [createConfigModule(), ScheduleModule.forRoot()],
   controllers: [BaseController],
-  providers: [Parser],
+  providers: [Parser, Cache],
 })
 export class AppModule {}
