@@ -19,14 +19,14 @@ export class Parser {
   private cache: Record<string, string> = {};
 
   constructor(private config: ConfigService) {
-    this.root = path.resolve(this.config.get<string>("root"));
-    const defaultPath = this.config.get<string>("defaultProject");
+    this.root = path.resolve(this.config.get<string>("ROOT"));
+    const defaultPath = this.config.get<string>("DEFAULT_PROJECT");
     if (defaultPath) {
       this.default = normalize(defaultPath);
     }
-    const builds = this.config.get<Array<string>>("buildDirs");
+    const builds = this.config.get<string>("BUILD_DIRS");
     if (builds) {
-      this.buildDirs = builds;
+      this.buildDirs = builds.split(",").map((dir) => dir.trim());
     }
   }
 

@@ -8,25 +8,14 @@ import { ScheduleModule } from "@nestjs/schedule";
 import { Cache } from './Cache';
 
 function createConfigModule() {
-  const envFiles: Array<string> = [];
+  const envFiles: Array<string> = [".env"];
   const env = process.env.NODE_ENV;
   const envFile = path.resolve(__dirname, `../.env.${env}`);
   if (env && fileExists(envFile)) {
     envFiles.push(`.env.${env}`);
   }
-  envFiles.push(".env");
   return ConfigModule.forRoot({
     isGlobal: true,
-    load: [
-      async () => {
-        let result: Record<string, any> = {};
-        try {
-          const loadResult = await import(`./config.${env}.js`);
-          result = loadResult.default.default;
-        } catch (error) {}
-        return result;
-      },
-    ],
     envFilePath: envFiles,
   });
 }
