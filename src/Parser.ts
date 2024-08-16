@@ -45,7 +45,6 @@ export class Parser {
     let possibleFile: string | undefined = this.cache[searchPath];
     let exists = await fileExists(possibleFile);
     if (possibleFile && exists) {
-      this.cache[searchPath] = possibleFile;
       return possibleFile;
     }
 

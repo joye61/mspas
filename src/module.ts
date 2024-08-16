@@ -5,7 +5,7 @@ import path from "node:path";
 import { fileExists } from "./functions";
 import { Parser } from "./Parser";
 import { ScheduleModule } from "@nestjs/schedule";
-import { Cache } from './Cache';
+import { Cache } from "./Cache";
 
 function createConfigModule() {
   const envFiles: Array<string> = [".env"];
